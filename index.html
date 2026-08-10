@@ -5,19 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CVGLOO — Demande de devis</title>
 <style>
-:root{--noir:#090D18;--navy:#101B3E;--bleu:#3E7BFA;--bleu-clair:#8FB4FF;--blanc:#F4F7FF;--gris:#96A0C4;--taupe:#6E6357;--ligne:rgba(143,180,255,.22)}
+:root{--noir:#090D18;--navy:#101B3E;--bleu:#3E7BFA;--bleu-clair:#8FB4FF;--blanc:#F4F7FF;--gris:#96A0C4;--ligne:rgba(143,180,255,.22)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:linear-gradient(180deg,#0A0F20 0%,#0B1226 46%,#0A0F1C 100%);color:var(--blanc);font-family:'Segoe UI','Helvetica',sans-serif;padding:20px}
 body{max-width:700px;margin:0 auto}
-.container{background:rgba(16,27,62,.6);border:1px solid var(--ligne);border-radius:12px;padding:40px;backdrop-filter:blur(10px)}
+.container{background:rgba(16,27,62,.6);border:1px solid var(--ligne);border-radius:12px;padding:40px;backdrop-filter:blur(10px);position:relative}
 .brand{display:flex;align-items:center;gap:12px;margin-bottom:32px}
 .mark{width:46px;height:46px;border:1.2px solid var(--bleu-clair);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:var(--blanc)}
 .brand-name{font-weight:700;font-size:24px;letter-spacing:.04em}
 .brand-name b{color:var(--bleu-clair)}
-h1{font-size:32px;font-weight:900;margin-bottom:12px;line-height:1.2}
+h1{font-size:32px;font-weight:900;margin-bottom:28px;line-height:1.2}
 h1 em{font-style:normal;color:var(--bleu-clair)}
 .step-title{font-size:14px;letter-spacing:.22em;text-transform:uppercase;color:var(--bleu-clair);margin-bottom:20px}
-.subtitle{color:var(--gris);font-size:16px;line-height:1.6;margin-bottom:28px}
 .step{display:none}
 .step.active{display:block}
 .input-group{margin-bottom:24px}
@@ -27,18 +26,32 @@ label{display:block;font-weight:600;font-size:15px;margin-bottom:10px;color:var(
 .option:hover{border-color:var(--bleu-clair);background:rgba(62,123,250,.08)}
 .option input[type="radio"],.option input[type="checkbox"]{cursor:pointer;accent-color:var(--bleu-clair);width:18px;height:18px}
 .option label{margin:0;cursor:pointer;flex:1;font-weight:400;font-size:15px}
-textarea{width:100%;min-height:140px;padding:14px;border:1px solid var(--ligne);border-radius:8px;background:rgba(255,255,255,.04);color:var(--blanc);font-family:inherit;font-size:14px;resize:vertical}
-textarea::placeholder{color:var(--gris)}
-textarea:focus{outline:none;border-color:var(--bleu-clair);background:rgba(62,123,250,.08)}
+textarea,.text-input{width:100%;padding:14px;border:1px solid var(--ligne);border-radius:8px;background:rgba(255,255,255,.04);color:var(--blanc);font-family:inherit;font-size:14px}
+textarea{min-height:140px;resize:vertical}
+.text-input{height:48px}
+textarea::placeholder,.text-input::placeholder{color:var(--gris)}
+textarea:focus,.text-input:focus{outline:none;border-color:var(--bleu-clair);background:rgba(62,123,250,.08)}
+.subfields{background:rgba(62,123,250,.06);border:1px solid var(--ligne);border-radius:10px;padding:20px;margin-top:20px;display:none}
+.subfields.active{display:block}
 .btn-group{display:flex;gap:12px;margin-top:32px}
 button{padding:12px 24px;border:none;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s;letter-spacing:.05em}
 .btn-primary{background:var(--bleu);color:var(--noir)}
 .btn-primary:hover{background:var(--bleu-clair)}
 .btn-secondary{border:1px solid var(--ligne);background:transparent;color:var(--blanc)}
 .btn-secondary:hover{border-color:var(--bleu-clair);background:rgba(62,123,250,.08)}
-.result-box{background:rgba(62,123,250,.12);border:1px solid var(--bleu-clair);border-radius:8px;padding:20px;margin-top:24px;display:none}
-.result-box.active{display:block}
-.result-box pre{background:rgba(0,0,0,.3);padding:14px;border-radius:6px;overflow-x:auto;font-size:13px;line-height:1.5}
+.attach-box{background:rgba(62,123,250,.08);border:1px solid var(--ligne);border-radius:10px;padding:20px;margin-bottom:24px}
+.attach-box p{color:var(--blanc);font-weight:600;font-size:15px;margin-bottom:16px}
+.attach-links{display:flex;flex-direction:column;gap:10px}
+.attach-link{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--ligne);border-radius:8px;text-decoration:none;color:var(--blanc);font-size:14px;font-weight:600;transition:all .2s;cursor:pointer}
+.attach-link:hover{border-color:var(--bleu-clair);background:rgba(62,123,250,.12)}
+.attach-link .ic{width:32px;height:32px;border-radius:50%;background:var(--bleu);display:flex;align-items:center;justify-content:center;flex:none}
+.attach-link .ic svg{width:16px;height:16px;fill:var(--noir)}
+.recap-item{margin-bottom:20px}
+.recap-label{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--bleu-clair);font-weight:700;margin-bottom:6px}
+.recap-value{font-size:15px;color:var(--blanc);line-height:1.6;white-space:pre-wrap}
+.send-panel{display:none;margin-top:28px;padding-top:28px;border-top:1px solid var(--ligne)}
+.send-panel.active{display:block}
+.send-panel p{color:var(--gris);font-size:14px;margin-bottom:16px}
 .splash{position:fixed;inset:0;background:linear-gradient(180deg,#0A0F20 0%,#0B1226 46%,#0A0F1C 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;opacity:1;transition:opacity .6s ease-out .8s}
 .splash.hidden{opacity:0;pointer-events:none}
 .splash-logo{width:80px;height:80px;border:2px solid var(--bleu-clair);border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:36px;color:var(--blanc);margin-bottom:28px;animation:logoScale .8s cubic-bezier(.34,1.56,.64,1) forwards}
@@ -54,13 +67,6 @@ button{padding:12px 24px;border:none;border-radius:8px;font-weight:600;font-size
 .dot:nth-child(3){animation-delay:.4s}
 @keyframes dotPulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
 @keyframes dotsAppear{to{opacity:1}}
-.attach-box{background:rgba(62,123,250,.08);border:1px solid var(--ligne);border-radius:10px;padding:20px;margin-bottom:24px}
-.attach-box p{color:var(--gris);font-size:14px;line-height:1.6;margin-bottom:16px}
-.attach-links{display:flex;flex-direction:column;gap:10px}
-.attach-link{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--ligne);border-radius:8px;text-decoration:none;color:var(--blanc);font-size:14px;font-weight:600;transition:all .2s}
-.attach-link:hover{border-color:var(--bleu-clair);background:rgba(62,123,250,.12)}
-.attach-link .ic{width:32px;height:32px;border-radius:50%;background:var(--bleu);display:flex;align-items:center;justify-content:center;flex:none}
-.attach-link .ic svg{width:16px;height:16px;fill:var(--noir)}
 </style>
 </head>
 <body>
@@ -68,144 +74,143 @@ button{padding:12px 24px;border:none;border-radius:8px;font-weight:600;font-size
 <div class="container">
   <div class="splash" id="splash">
     <div class="splash-logo">C</div>
-    <div class="splash-title">Parle-moi<br>de ton <em>projet</em>.</div>
-    <div class="splash-subtitle">On y va ?</div>
-    <div class="splash-dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
+    <div class="splash-title">Quel projet<br>avez-vous en <em>tête</em>&nbsp;?</div>
+    <div class="splash-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
   </div>
 
   <div class="brand">
     <div class="mark">C</div>
     <div class="brand-name">CV<b>GLOO</b></div>
   </div>
-  
-  <h1>Parle-moi<br>de ton <em>projet</em>.</h1>
 
-  <!-- STEP 1 : Professionnel ou particulier -->
+  <h1>Quel projet<br>avez-vous en <em>tête</em>&nbsp;?</h1>
+
+  <!-- STEP 1 : Profil -->
   <div class="step active" data-step="1">
     <div class="step-title">Étape 1/3</div>
-    <div class="subtitle">Commençons par le début.</div>
-    
+
     <div class="input-group">
-      <label>Tu es…</label>
+      <label>Vous êtes…</label>
       <div class="options">
         <div class="option">
-          <input type="radio" name="profile" value="professionnel" id="pro">
+          <input type="radio" name="profile" value="Professionnel / Indépendant / Entreprise" id="pro">
           <label for="pro">Professionnel / Indépendant / Entreprise</label>
         </div>
         <div class="option">
-          <input type="radio" name="profile" value="particulier" id="part">
+          <input type="radio" name="profile" value="Particulier" id="part">
           <label for="part">Particulier</label>
         </div>
       </div>
     </div>
 
+    <div class="subfields" id="proFields">
+      <div class="input-group">
+        <label for="companyName">Nom de l'entreprise / Raison sociale</label>
+        <input type="text" class="text-input" id="companyName" placeholder="Ex. : KL Lash Artist">
+      </div>
+      <div class="input-group">
+        <label for="contactPro">Contact (mail, whatsapp, instagram, snapchat)</label>
+        <input type="text" class="text-input" id="contactPro" placeholder="Ex. : 06 12 34 56 78 (WhatsApp) ou @votrepseudo">
+      </div>
+    </div>
+
+    <div class="subfields" id="partFields">
+      <div class="input-group">
+        <label for="firstName">Prénom</label>
+        <input type="text" class="text-input" id="firstName" placeholder="Votre prénom">
+      </div>
+      <div class="input-group">
+        <label for="contactPart">Contact (mail, whatsapp, instagram, snapchat)</label>
+        <input type="text" class="text-input" id="contactPart" placeholder="Ex. : 06 12 34 56 78 (WhatsApp) ou @votrepseudo">
+      </div>
+    </div>
+
     <div class="btn-group">
-      <button class="btn-primary" onclick="goStep(2)">Continuer</button>
+      <button class="btn-primary" id="btnStep1Continue" onclick="goStep(2)">Continuer</button>
     </div>
   </div>
 
-  <!-- STEP 2 : Type de prestation -->
+  <!-- STEP 2 : Prestations -->
   <div class="step" data-step="2">
     <div class="step-title">Étape 2/3</div>
-    <div class="subtitle">Qu'est-ce que tu cherches ?</div>
-    
+
     <div class="input-group">
-      <label>Prestation</label>
+      <label>Prestations (plusieurs choix possibles)</label>
       <div class="options" id="prestations">
         <div class="option">
-          <input type="radio" name="prestation" value="CV optimisé" id="p1">
+          <input type="checkbox" name="prestation" value="CV optimisé" id="p1">
           <label for="p1">CV optimisé (10 €)</label>
         </div>
         <div class="option">
-          <input type="radio" name="prestation" value="Site web" id="p2">
+          <input type="checkbox" name="prestation" value="Site web" id="p2">
           <label for="p2">Site web</label>
         </div>
         <div class="option">
-          <input type="radio" name="prestation" value="Modules & présentations" id="p3">
+          <input type="checkbox" name="prestation" value="Modules & présentations" id="p3">
           <label for="p3">Modules & présentations (à partir de 30 €)</label>
         </div>
         <div class="option">
-          <input type="radio" name="prestation" value="Modules de révision" id="p4">
+          <input type="checkbox" name="prestation" value="Modules de révision" id="p4">
           <label for="p4">Modules de révision (30 €)</label>
         </div>
         <div class="option">
-          <input type="radio" name="prestation" value="Jeu mobile personnalisé" id="p5">
+          <input type="checkbox" name="prestation" value="Jeu mobile personnalisé" id="p5">
           <label for="p5">Jeu mobile personnalisé (à partir de 80 €)</label>
         </div>
         <div class="option">
-          <input type="radio" name="prestation" value="Business game" id="p6">
+          <input type="checkbox" name="prestation" value="Business game" id="p6">
           <label for="p6">Business game (à partir de 400 €)</label>
         </div>
         <div class="option">
-          <input type="radio" name="prestation" value="Automatisation & outils" id="p7">
+          <input type="checkbox" name="prestation" value="Formation" id="p9">
+          <label for="p9">Formation — pros et particuliers (à négocier)</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" name="prestation" value="Automatisation & outils" id="p7">
           <label for="p7">Automatisation & outils (à négocier)</label>
         </div>
         <div class="option">
-          <input type="radio" name="prestation" value="Autres demandes" id="p8">
+          <input type="checkbox" name="prestation" value="Autres demandes" id="p8">
           <label for="p8">Autres demandes (à négocier)</label>
         </div>
       </div>
     </div>
 
-    <!-- Sous-options Site Web -->
-    <div id="siteWebOptions" style="display:none;margin-top:20px">
-      <label>Formule</label>
+    <div class="subfields" id="siteWebOptions">
+      <label>Formule site web</label>
       <div class="options">
-        <div class="option">
-          <input type="radio" name="formule-web" value="1 page - 250€" id="web1">
-          <label for="web1">1 page - 250 €</label>
-        </div>
-        <div class="option">
-          <input type="radio" name="formule-web" value="Multipage - 550€" id="web2">
-          <label for="web2">Multipage - 550 €</label>
-        </div>
-        <div class="option">
-          <input type="radio" name="formule-web" value="Avec réservation - 900€" id="web3">
-          <label for="web3">Avec réservation - 900 €</label>
-        </div>
-        <div class="option">
-          <input type="radio" name="formule-web" value="Avec boutique - 1100€" id="web4">
-          <label for="web4">Avec boutique - 1100 €</label>
-        </div>
-        <div class="option">
-          <input type="radio" name="formule-web" value="Paiement intégré - 1300€" id="web5">
-          <label for="web5">Paiement intégré - 1300 €</label>
-        </div>
-        <div class="option">
-          <input type="radio" name="formule-web" value="SEO & conformité - 1500€" id="web6">
-          <label for="web6">SEO & conformité - 1500 €</label>
-        </div>
-        <div class="option">
-          <input type="radio" name="formule-web" value="Site web particulier" id="webpart">
-          <label for="webpart">Site web pour particulier</label>
-        </div>
+        <div class="option"><input type="radio" name="formule-web" value="1 page - 250€" id="web1"><label for="web1">1 page - 250 €</label></div>
+        <div class="option"><input type="radio" name="formule-web" value="Multipage - 550€" id="web2"><label for="web2">Multipage - 550 €</label></div>
+        <div class="option"><input type="radio" name="formule-web" value="Avec réservation - 900€" id="web3"><label for="web3">Avec réservation - 900 €</label></div>
+        <div class="option"><input type="radio" name="formule-web" value="Avec boutique - 1100€" id="web4"><label for="web4">Avec boutique - 1100 €</label></div>
+        <div class="option"><input type="radio" name="formule-web" value="Paiement intégré - 1300€" id="web5"><label for="web5">Paiement intégré - 1300 €</label></div>
+        <div class="option"><input type="radio" name="formule-web" value="SEO & conformité - 1500€" id="web6"><label for="web6">SEO & conformité - 1500 €</label></div>
+        <div class="option"><input type="radio" name="formule-web" value="Site web particulier" id="webpart"><label for="webpart">Site web pour particulier</label></div>
       </div>
     </div>
 
     <div class="btn-group">
       <button class="btn-secondary" onclick="goStep(1)">Retour</button>
-      <button class="btn-primary" onclick="goStep(3)">Continuer</button>
+      <button class="btn-primary" id="btnStep2Continue" onclick="goStep(3)">Continuer</button>
     </div>
   </div>
 
   <!-- STEP 3 : Détails du projet -->
   <div class="step" data-step="3">
     <div class="step-title">Étape 3/3</div>
-    <div class="subtitle">Raconte-moi ton projet.</div>
-    
+
     <div class="input-group">
-      <label for="contexte">Contexte, éléments souhaités, besoins précis, pièces jointes, etc.</label>
-      <textarea id="contexte" placeholder="Décris ton projet en détail : ce que tu cherches, le contexte, tes attentes, et n'hésite pas à ajouter des informations importantes..."></textarea>
+      <label for="contexte">Contexte, éléments souhaités, besoins précis, etc...</label>
+      <textarea id="contexte" placeholder="Décrivez votre projet en détail : ce que vous cherchez, le contexte, vos attentes, et n'hésitez pas à ajouter des informations importantes..."></textarea>
     </div>
 
     <div class="attach-box">
-      <p><strong>As-tu des visuels, documents ou captures à transmettre ?</strong><br>
-      Ce formulaire ne permet pas l'envoi de fichiers — transmets-les directement via l'un de ces canaux :</p>
+      <p>Visuels, documents, captures à transmettre ?</p>
       <div class="attach-links">
+        <a class="attach-link" href="mailto:cvgloo2000@gmail.com" target="_blank" rel="noopener">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h17A1.5 1.5 0 0 1 22 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13Zm1.8.4 8.2 6.15 8.2-6.15H3.8Zm16.7 1.3-8.06 6.05a1 1 0 0 1-1.28 0L3.5 7.2v11.3h17V7.2Z"/></svg></div>
+          Mail — cvgloo2000@gmail.com
+        </a>
         <a class="attach-link" href="https://wa.me/33757825079" target="_blank" rel="noopener">
           <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.06-1.33A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2Zm5.2 14.2c-.22.62-1.28 1.18-1.76 1.24-.45.06-1.02.09-1.65-.1-.38-.12-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.08-1.44-1.08-2.74 0-1.3.68-1.94.93-2.2.24-.27.53-.33.7-.33h.5c.16 0 .38-.02.58.45.22.53.75 1.84.82 1.97.07.14.11.3.02.48-.09.18-.14.29-.27.45-.14.16-.29.36-.41.48-.14.14-.28.29-.12.57.16.28.7 1.17 1.52 1.9 1.05.94 1.93 1.24 2.2 1.38.28.14.44.12.6-.07.16-.2.7-.82.89-1.1.18-.28.36-.23.6-.14.25.09 1.56.74 1.83.87.27.14.45.2.51.32.07.13.07.71-.16 1.33Z"/></svg></div>
           WhatsApp — 07 57 82 50 79
@@ -222,75 +227,177 @@ button{padding:12px 24px;border:none;border-radius:8px;font-weight:600;font-size
     </div>
 
     <div class="input-group">
-      <label for="filelink">Ou lien vers tes fichiers (Drive, Dropbox, WeTransfer…) — facultatif</label>
-      <textarea id="filelink" placeholder="Colle ici le lien vers tes visuels ou documents, si tu préfères cette option." style="min-height:70px"></textarea>
-    </div>
-
-    <div class="input-group">
-      <label for="contact">Ton contact (WhatsApp, Instagram, Snapchat, ou mail)</label>
-      <textarea id="contact" placeholder="Ex. : 06 12 34 56 78 (WhatsApp) ou @tonpseudo (Instagram)"></textarea>
+      <label for="filelink">Drive, Dropbox, WeTransfer… : lien (facultatif)</label>
+      <textarea id="filelink" placeholder="Collez ici le lien vers vos visuels ou documents, si vous préférez cette option." style="min-height:70px"></textarea>
     </div>
 
     <div class="btn-group">
       <button class="btn-secondary" onclick="goStep(2)">Retour</button>
-      <button class="btn-primary" onclick="generateResult()">Générer ma demande</button>
+      <button class="btn-primary" onclick="showRecap()">Voir le récapitulatif</button>
     </div>
   </div>
 
-  <!-- RÉSULTAT -->
-  <div class="result-box" id="resultBox">
-    <p style="margin-bottom:16px;font-weight:600">Voici ton formulaire — copie-le et envoie-le via WhatsApp, Instagram, Snapchat, ou mail :</p>
-    <pre id="resultText"></pre>
-    <button class="copy-btn" onclick="copyToClipboard()">📋 Copier</button>
+  <!-- STEP 4 : Récapitulatif -->
+  <div class="step" data-step="4">
+    <div class="step-title">Récapitulatif</div>
+    <div id="recapContent"></div>
+
+    <div class="send-panel" id="sendPanel">
+      <p>Comment souhaitez-vous transmettre votre demande ?</p>
+      <div class="attach-links">
+        <a class="attach-link" onclick="sendVia('mail')">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h17A1.5 1.5 0 0 1 22 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13Zm1.8.4 8.2 6.15 8.2-6.15H3.8Zm16.7 1.3-8.06 6.05a1 1 0 0 1-1.28 0L3.5 7.2v11.3h17V7.2Z"/></svg></div>
+          Mail
+        </a>
+        <a class="attach-link" onclick="sendVia('whatsapp')">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.06-1.33A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2Zm5.2 14.2c-.22.62-1.28 1.18-1.76 1.24-.45.06-1.02.09-1.65-.1-.38-.12-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.08-1.44-1.08-2.74 0-1.3.68-1.94.93-2.2.24-.27.53-.33.7-.33h.5c.16 0 .38-.02.58.45.22.53.75 1.84.82 1.97.07.14.11.3.02.48-.09.18-.14.29-.27.45-.14.16-.29.36-.41.48-.14.14-.28.29-.12.57.16.28.7 1.17 1.52 1.9 1.05.94 1.93 1.24 2.2 1.38.28.14.44.12.6-.07.16-.2.7-.82.89-1.1.18-.28.36-.23.6-.14.25.09 1.56.74 1.83.87.27.14.45.2.51.32.07.13.07.71-.16 1.33Z"/></svg></div>
+          WhatsApp
+        </a>
+        <a class="attach-link" onclick="sendVia('instagram')">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2c2.72 0 3.06.01 4.12.06 1.06.05 1.79.22 2.43.47.66.26 1.22.6 1.77 1.15.55.55.9 1.11 1.15 1.77.25.64.42 1.37.47 2.43.05 1.06.06 1.4.06 4.12s-.01 3.06-.06 4.12c-.05 1.06-.22 1.79-.47 2.43-.26.66-.6 1.22-1.15 1.77-.55.55-1.11.9-1.77 1.15-.64.25-1.37.42-2.43.47-1.06.05-1.4.06-4.12.06s-3.06-.01-4.12-.06c-1.06-.05-1.79-.22-2.43-.47-.66-.26-1.22-.6-1.77-1.15-.55-.55-.9-1.11-1.15-1.77-.25-.64-.42-1.37-.47-2.43C2.01 15.06 2 14.72 2 12s.01-3.06.06-4.12c.05-1.06.22-1.79.47-2.43.26-.66.6-1.22 1.15-1.77.55-.55 1.11-.9 1.77-1.15.64-.25 1.37-.42 2.43-.47C8.94 2.01 9.28 2 12 2Zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4Zm5.2-8.4a1.17 1.17 0 1 1 0-2.34 1.17 1.17 0 0 1 0 2.34Z"/></svg></div>
+          Instagram
+        </a>
+        <a class="attach-link" onclick="sendVia('snapchat')">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2c3.5 0 5.6 2.5 5.7 5.4l.1 2.6c0 .2.1.3.4.5.3.2 1.1.5 1.5.6.3.1.7.3.7.7 0 .3-.2.5-.5.7-.5.3-1.2.5-1.5.7-.1.1-.2.2-.1.4.1.6.4 1.1.9 1.5.6.5 1.4.7 1.9.8.3.1.5.3.4.6-.1.5-1 .8-2.3 1-.1.2-.1.5-.2.8-.1.3-.3.4-.6.4h-.1c-.4 0-.9-.1-1.5-.1-.6 0-1 .2-1.6.6-.7.5-1.5 1.1-2.9 1.1s-2.2-.6-2.9-1.1c-.6-.4-1-.6-1.6-.6-.6 0-1.1.1-1.5.1h-.1c-.3 0-.5-.1-.6-.4-.1-.3-.1-.6-.2-.8-1.3-.2-2.2-.5-2.3-1-.1-.3.1-.5.4-.6.5-.1 1.3-.3 1.9-.8.5-.4.8-.9.9-1.5.1-.2 0-.3-.1-.4-.3-.2-1-.4-1.5-.7-.3-.2-.5-.4-.5-.7 0-.4.4-.6.7-.7.4-.1 1.2-.4 1.5-.6.3-.2.4-.3.4-.5l.1-2.6C6.4 4.5 8.5 2 12 2Z"/></svg></div>
+          Snapchat
+        </a>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn-secondary" onclick="goStep(3)">Retour</button>
+      <button class="btn-primary" onclick="toggleSendPanel()">Envoyer</button>
+    </div>
   </div>
 
 </div>
 
 <script>
-const profile = () => document.querySelector('input[name="profile"]:checked')?.value;
-const prestation = () => document.querySelector('input[name="prestation"]:checked')?.value;
-const formuleWeb = () => document.querySelector('input[name="formule-web"]:checked')?.value;
-const contexte = () => document.getElementById('contexte').value;
-const contact = () => document.getElementById('contact').value;
-
-document.querySelectorAll('input[name="prestation"]').forEach(input => {
-  input.addEventListener('change', () => {
-    document.getElementById('siteWebOptions').style.display = input.value === 'Site web' ? 'block' : 'none';
-  });
-});
-
 function goStep(n) {
-  if (n === 2 && !profile()) { alert('Choisis une option'); return; }
-  if (n === 3 && !prestation()) { alert('Choisis une prestation'); return; }
-  if (n === 3 && prestation() === 'Site web' && !formuleWeb()) { alert('Choisis une formule'); return; }
-  
+  if (n === 2) {
+    const profile = document.querySelector('input[name="profile"]:checked');
+    if (!profile) { alert('Merci de choisir une option.'); return; }
+    if (profile.value.startsWith('Professionnel')) {
+      if (!document.getElementById('companyName').value.trim() || !document.getElementById('contactPro').value.trim()) {
+        alert('Merci de compléter le nom de l\'entreprise et le contact.'); return;
+      }
+    } else {
+      if (!document.getElementById('firstName').value.trim() || !document.getElementById('contactPart').value.trim()) {
+        alert('Merci de compléter votre prénom et votre contact.'); return;
+      }
+    }
+  }
+  if (n === 3) {
+    const prestations = document.querySelectorAll('input[name="prestation"]:checked');
+    if (prestations.length === 0) { alert('Merci de choisir au moins une prestation.'); return; }
+    const siteWebChecked = document.getElementById('p2').checked;
+    if (siteWebChecked && !document.querySelector('input[name="formule-web"]:checked')) {
+      alert('Merci de choisir une formule pour le site web.'); return;
+    }
+  }
   document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
   document.querySelector(`[data-step="${n}"]`).classList.add('active');
   window.scrollTo(0, 0);
 }
 
-function generateResult() {
-  if (!contexte() || !contact()) { alert('Remplis tous les champs'); return; }
-  
-  let txt = 'DEMANDE DE DEVIS — CVGLOO\n\n';
-  txt += `Profil : ${profile()}\n`;
-  txt += `Prestation : ${prestation()}`;
-  if (prestation() === 'Site web') txt += ` — ${formuleWeb()}`;
-  txt += `\n\nProjet :\n${contexte()}`;
-  const fl = document.getElementById('filelink').value.trim();
-  if (fl) txt += `\n\nFichiers/liens joints :\n${fl}`;
-  txt += `\n\nContact :\n${contact()}`;
-  
-  document.getElementById('resultText').textContent = txt;
-  document.getElementById('resultBox').classList.add('active');
-  window.scrollTo(0, document.getElementById('resultBox').offsetTop - 50);
+document.querySelectorAll('input[name="profile"]').forEach(input => {
+  input.addEventListener('change', () => {
+    document.getElementById('proFields').classList.toggle('active', input.value.startsWith('Professionnel') && input.checked);
+    document.getElementById('partFields').classList.toggle('active', input.value === 'Particulier' && input.checked);
+  });
+});
+
+document.getElementById('p2').addEventListener('change', (e) => {
+  document.getElementById('siteWebOptions').classList.toggle('active', e.target.checked);
+});
+
+function getProfileData() {
+  const profile = document.querySelector('input[name="profile"]:checked')?.value || '';
+  const isPro = profile.startsWith('Professionnel');
+  return {
+    profile,
+    identite: isPro ? document.getElementById('companyName').value.trim() : document.getElementById('firstName').value.trim(),
+    identiteLabel: isPro ? 'Nom de l\'entreprise / Raison sociale' : 'Prénom',
+    contact: isPro ? document.getElementById('contactPro').value.trim() : document.getElementById('contactPart').value.trim()
+  };
 }
 
-function copyToClipboard() {
-  const txt = document.getElementById('resultText').textContent;
-  navigator.clipboard.writeText(txt).then(() => {
-    alert('Copié ! 📋 Envoie-le via WhatsApp, Instagram, Snapchat ou mail.');
-  });
+function getPrestations() {
+  return Array.from(document.querySelectorAll('input[name="prestation"]:checked')).map(i => i.value);
+}
+
+function buildMessageText() {
+  const p = getProfileData();
+  const prestations = getPrestations();
+  const formuleWeb = document.querySelector('input[name="formule-web"]:checked')?.value;
+  const contexte = document.getElementById('contexte').value.trim();
+  const filelink = document.getElementById('filelink').value.trim();
+
+  let txt = 'DEMANDE DE DEVIS — CVGLOO\n\n';
+  txt += `Profil : ${p.profile}\n`;
+  txt += `${p.identiteLabel} : ${p.identite}\n`;
+  txt += `Contact : ${p.contact}\n\n`;
+  txt += `Prestations : ${prestations.join(', ')}`;
+  if (formuleWeb) txt += `\nFormule site web : ${formuleWeb}`;
+  txt += `\n\nProjet :\n${contexte}`;
+  if (filelink) txt += `\n\nFichiers/liens joints :\n${filelink}`;
+  return txt;
+}
+
+function showRecap() {
+  const p = getProfileData();
+  const prestations = getPrestations();
+  const formuleWeb = document.querySelector('input[name="formule-web"]:checked')?.value;
+  const contexte = document.getElementById('contexte').value.trim();
+  const filelink = document.getElementById('filelink').value.trim();
+
+  if (!contexte) { alert('Merci de décrire votre projet avant de continuer.'); return; }
+
+  let html = '';
+  html += recapBlock('Profil', p.profile);
+  html += recapBlock(p.identiteLabel, p.identite);
+  html += recapBlock('Contact', p.contact);
+  html += recapBlock('Prestations', prestations.join(', '));
+  if (formuleWeb) html += recapBlock('Formule site web', formuleWeb);
+  html += recapBlock('Projet', contexte);
+  if (filelink) html += recapBlock('Fichiers / liens', filelink);
+
+  document.getElementById('recapContent').innerHTML = html;
+  document.getElementById('sendPanel').classList.remove('active');
+  goStep(4);
+}
+
+function recapBlock(label, value) {
+  return `<div class="recap-item"><div class="recap-label">${label}</div><div class="recap-value">${escapeHtml(value)}</div></div>`;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function toggleSendPanel() {
+  document.getElementById('sendPanel').classList.toggle('active');
+}
+
+function sendVia(method) {
+  const txt = buildMessageText();
+  if (method === 'mail') {
+    window.location.href = 'mailto:cvgloo2000@gmail.com?subject=' + encodeURIComponent('Demande de devis CVGLOO') + '&body=' + encodeURIComponent(txt);
+  } else if (method === 'whatsapp') {
+    window.open('https://wa.me/33757825079?text=' + encodeURIComponent(txt), '_blank');
+  } else if (method === 'instagram') {
+    navigator.clipboard.writeText(txt).then(() => {
+      window.open('https://www.instagram.com/cvgloo/', '_blank');
+      alert('Texte copié 📋 — collez-le dans le message Instagram (Instagram ne permet pas le pré-remplissage automatique).');
+    });
+  } else if (method === 'snapchat') {
+    navigator.clipboard.writeText(txt).then(() => {
+      window.open('https://www.snapchat.com/add/cvgloo', '_blank');
+      alert('Texte copié 📋 — collez-le dans le message Snapchat (Snapchat ne permet pas le pré-remplissage automatique).');
+    });
+  }
 }
 
 window.addEventListener('load', () => {
