@@ -273,6 +273,38 @@ button{padding:12px 24px;border:none;border-radius:8px;font-weight:600;font-size
 </div>
 
 <script>
+// ⚙️ Colle ici l'URL de ton Google Apps Script (Étape "Déploiement" du tutoriel).
+// Tant que c'est vide, le formulaire fonctionne normalement, juste sans suivi.
+const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz_TwnjS_iDw-5LkL1hr1xUQC8OWkYzyCTvxNGMGY90I3IWmuL8dQgZ4EvlCpb2Ljcybw/exec';
+
+function logToSheet(etape, extra = {}) {
+  if (!SHEET_ENDPOINT) return;
+  let identite = '', contact = '', profileVal = '';
+  try {
+    const p = getProfileData();
+    identite = p.identite || '';
+    contact = p.contact || '';
+    profileVal = p.profile || '';
+  } catch (e) {}
+  const payload = {
+    etape,
+    profile: profileVal,
+    identite,
+    contact,
+    prestations: (typeof getPrestations === 'function' ? getPrestations().join(', ') : ''),
+    formuleWeb: document.querySelector('input[name="formule-web"]:checked')?.value || '',
+    projet: document.getElementById('contexte')?.value.trim() || '',
+    filelink: document.getElementById('filelink')?.value.trim() || '',
+    canal: extra.canal || ''
+  };
+  fetch(SHEET_ENDPOINT, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+}
+
 function goStep(n) {
   if (n === 2) {
     const profile = document.querySelector('input[name="profile"]:checked');
@@ -286,6 +318,7 @@ function goStep(n) {
         alert('Merci de compléter votre prénom et votre contact.'); return;
       }
     }
+    logToSheet('1 - Identité renseignée');
   }
   if (n === 3) {
     const prestations = document.querySelectorAll('input[name="prestation"]:checked');
@@ -294,6 +327,7 @@ function goStep(n) {
     if (siteWebChecked && !document.querySelector('input[name="formule-web"]:checked')) {
       alert('Merci de choisir une formule pour le site web.'); return;
     }
+    logToSheet('2 - Prestations sélectionnées');
   }
   document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
   document.querySelector(`[data-step="${n}"]`).classList.add('active');
@@ -364,6 +398,7 @@ function showRecap() {
 
   document.getElementById('recapContent').innerHTML = html;
   document.getElementById('sendPanel').classList.remove('active');
+  logToSheet('3 - Récapitulatif consulté');
   goStep(4);
 }
 
@@ -383,6 +418,7 @@ function toggleSendPanel() {
 
 function sendVia(method) {
   const txt = buildMessageText();
+  logToSheet('4 - Demande envoyée', { canal: method });
   if (method === 'mail') {
     window.location.href = 'mailto:cvgloo2000@gmail.com?subject=' + encodeURIComponent('Demande de devis CVGLOO') + '&body=' + encodeURIComponent(txt);
   } else if (method === 'whatsapp') {
